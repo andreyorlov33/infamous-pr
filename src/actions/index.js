@@ -1,6 +1,34 @@
 import axios from 'axios'
 import * as constants from '../utils/constants'
+import fire from '../utils/fire'
 
+export const upload_image = image => async dispatch =>{
+    try {
+      let meta = {cacheControl: "max-age="+(60*60*24*365)}
+      let storage_ref = fire.storage().ref('images/'+image.name)
+      let task = storage_ref.put(image, meta)
+    
+      task.on('state_changed', 
+      snapshot => console.log(snapshot.bytesTransferred/snapshot.totalBytes)*100, 
+      err => console.error(err),
+      ()=> {
+            console.log("Uploaded ...")
+            let meta = task.snapshot.metadata
+            let key = meta.md5Hash.replace(/\//g,":")
+            let file_record = {
+                downloadUrl : task.snapshot.downloadURL,
+                key: key,
+                md5Hash: meta.md5Hash,
+                name: meta.name
+            }
+            console.log(file_record.downloadUrl)
+        }
+      )
+    }
+    catch(e){
+        console.log(e)
+    }
+}
 export const fetch_all_news = () => async dispatch => {
     try {
         let {data} = await axios.get(constants.fetch_all_news_url)

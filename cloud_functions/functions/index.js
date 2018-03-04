@@ -18,6 +18,8 @@ const update_client_profile = require('./admin/update_client_profile')
 const create_client_profile = require('./admin/create_client_profile')
 const delete_client_profile = require('./admin/delete_client_profile')
 
+const upload_image_file = require('./admin/upload_image_file')
+
 admin.initializeApp(functions.config().firebase);
 
 // Client Side Main Website 
@@ -45,3 +47,5 @@ exports.create_client_profile = functions.https.onRequest(create_client_profile)
 exports.update_client_profile = functions.https.onRequest(update_client_profile)
 exports.delete_client_profile = functions.https.onRequest(delete_client_profile)
 
+//ADMIN IMAGES
+exports.upload_image_file = functions.https.onRequest(upload_image_file)
